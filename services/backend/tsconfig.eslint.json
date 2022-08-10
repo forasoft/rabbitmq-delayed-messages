@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.server.json",
+  "include": [
+    "service/src/**/*.ts",
+    "service/src/**/*.js"
+  ]
+}

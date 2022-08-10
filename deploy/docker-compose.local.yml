@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  rabbit:
+    build:
+      context: ../services/rabbit
+    restart: unless-stopped
+    env_file:
+      - ./.env.local
+    environment:
+      - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbitmq_management path_prefix "/rabbit"
+    ports:
+      - 15672:15672
+    volumes:
+      - ../_data/rabbit:/var/lib/rabbitmq
+
+  backend:
+    build:
+      context: ../services/backend
+      dockerfile: Dockerfile.local
+    restart: unless-stopped
+    env_file:
+      - ./.env.local
+    depends_on:
+      - rabbit
+    links:
+      - rabbit
+    volumes:
+      - ../services/backend:/app
+      - /app/node_modules
+    command: npm run dev
